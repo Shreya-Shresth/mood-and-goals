@@ -248,12 +248,12 @@ const Index = () => {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           
-          {/* Enhanced Bucket List Module with Forest Background */}
+          {/* Enhanced Bucket List Module with Garden Background */}
           <Card className="lg:col-span-1 hover:shadow-2xl transition-all duration-500 hover:scale-105 bg-white/90 backdrop-blur-sm border-0 shadow-xl overflow-hidden">
             <CardHeader 
               className="text-white rounded-t-2xl relative overflow-hidden h-32"
               style={{
-                backgroundImage: `url('/lovable-uploads/70c1ed90-665d-4b9f-b4c3-22b0e74ba932.png')`,
+                backgroundImage: `url('/lovable-uploads/5c3907ba-74ad-4bdb-8d8d-7a097f61a018.png')`,
                 backgroundSize: 'cover',
                 backgroundPosition: 'center',
                 backgroundRepeat: 'no-repeat'
