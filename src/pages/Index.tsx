@@ -1,5 +1,6 @@
+
 import { useState } from 'react';
-import { CheckCircle, Heart, ImageIcon, BookOpen, ShoppingCart, Plus, Trash2, TrendingUp, Users, Target, Zap, Star, ArrowRight } from 'lucide-react';
+import { CheckCircle, Heart, ImageIcon, BookOpen, Watch, Plus, Trash2, TrendingUp, Users, Target, Zap, Star, ArrowRight, Upload } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -19,16 +20,16 @@ const Index = () => {
   // Mood Tracker State
   const [currentMood, setCurrentMood] = useState('');
   const moods = [
-    { emoji: '😊', label: 'Happy', color: 'bg-yellow-400' },
-    { emoji: '😌', label: 'Calm', color: 'bg-blue-400' },
-    { emoji: '💪', label: 'Motivated', color: 'bg-green-400' },
-    { emoji: '😴', label: 'Tired', color: 'bg-purple-400' },
-    { emoji: '😔', label: 'Sad', color: 'bg-gray-400' }
+    { emoji: '😊', label: 'Happy', color: 'bg-yellow-400', theme: 'from-yellow-50 via-orange-50 to-yellow-100' },
+    { emoji: '😌', label: 'Calm', color: 'bg-blue-400', theme: 'from-blue-50 via-cyan-50 to-blue-100' },
+    { emoji: '💪', label: 'Motivated', color: 'bg-green-400', theme: 'from-green-50 via-emerald-50 to-green-100' },
+    { emoji: '😴', label: 'Tired', color: 'bg-purple-400', theme: 'from-purple-50 via-indigo-50 to-purple-100' },
+    { emoji: '😔', label: 'Sad', color: 'bg-gray-400', theme: 'from-gray-50 via-slate-50 to-gray-100' }
   ];
 
   // Image Slider State
   const [currentImage, setCurrentImage] = useState(0);
-  const images = [
+  const [images, setImages] = useState([
     {
       url: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4',
       caption: 'Find your inner peace'
@@ -41,14 +42,35 @@ const Index = () => {
       url: 'https://images.unsplash.com/photo-1469474968028-56623f02e42e',
       caption: 'Nature heals the soul'
     }
+  ]);
+
+  // Smart Watch Products State
+  const watchItems = [
+    { 
+      name: 'Apple Watch Ultra', 
+      price: '$799', 
+      image: 'https://images.unsplash.com/photo-1434494878577-86c23bcb06b9',
+      features: 'GPS, Cellular, Health Monitoring'
+    },
+    { 
+      name: 'Samsung Galaxy Watch', 
+      price: '$329', 
+      image: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30',
+      features: 'Sleep Tracking, ECG, Water Resistant'
+    },
+    { 
+      name: 'Garmin Forerunner', 
+      price: '$449', 
+      image: 'https://images.unsplash.com/photo-1508685096489-7aacd43bd3b1',
+      features: 'Running Dynamics, GPS, Long Battery'
+    }
   ];
 
-  // Shopping State
-  const wishlistItems = [
-    { name: 'Yoga Mat', price: '$45', image: 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b' },
-    { name: 'Essential Oils Set', price: '$89', image: 'https://images.unsplash.com/photo-1608571423902-eed4a5ad8108' },
-    { name: 'Journal', price: '$25', image: 'https://images.unsplash.com/photo-1531346878377-a5be20888e57' }
-  ];
+  // Get current mood theme
+  const getCurrentTheme = () => {
+    const mood = moods.find(m => m.label === currentMood);
+    return mood ? mood.theme : 'from-slate-50 via-blue-50 to-indigo-100';
+  };
 
   // Stats data
   const stats = [
@@ -98,8 +120,28 @@ const Index = () => {
     setCurrentImage((prev) => (prev - 1 + images.length) % images.length);
   };
 
+  // Add Image Function
+  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const newImage = {
+          url: e.target?.result as string,
+          caption: 'My favorite moment'
+        };
+        setImages([...images, newImage]);
+        toast({
+          title: "Image Added!",
+          description: "Your image has been added to the gallery.",
+        });
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
+    <div className={`min-h-screen bg-gradient-to-br ${getCurrentTheme()}`}>
       {/* Enhanced Header */}
       <header className="bg-white/90 backdrop-blur-lg border-b border-gray-200/50 sticky top-0 z-50 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
@@ -143,8 +185,7 @@ const Index = () => {
             </span>
           </h2>
           <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto leading-relaxed">
-            A modular dashboard for managing goals, mood, creativity, and shopping seamlessly. 
-            Track your wellness journey with beautiful analytics and interactive tools.
+            Your all-in-one dashboard for mastering goals, moods, creativity, and shopping—seamlessly. Elevate your wellness journey with stunning analytics and interactive tools that keep you inspired.
           </p>
           
           {/* Stats Grid */}
@@ -167,39 +208,41 @@ const Index = () => {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           
-          {/* Enhanced Bucket List Module */}
+          {/* Enhanced Bucket List Module with Forest Theme */}
           <Card className="lg:col-span-1 hover:shadow-2xl transition-all duration-500 hover:scale-105 bg-white/90 backdrop-blur-sm border-0 shadow-xl">
-            <CardHeader className="bg-gradient-to-br from-green-500 to-emerald-600 text-white rounded-t-2xl relative overflow-hidden">
-              <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -mr-16 -mt-16"></div>
+            <CardHeader className="bg-gradient-to-br from-green-700 via-emerald-600 to-green-500 text-white rounded-t-2xl relative overflow-hidden">
+              <div className="absolute inset-0" style={{
+                backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+              }}></div>
               <CardTitle className="flex items-center justify-between relative z-10">
                 <div className="flex items-center space-x-2">
                   <CheckCircle className="w-6 h-6" />
-                  <span>Bucket List</span>
+                  <span>Forest Goals</span>
                 </div>
                 <Badge className="bg-white/20 text-white border-0">{goals.length}</Badge>
               </CardTitle>
               <CardDescription className="text-green-100 relative z-10">
-                Track your life goals and dreams
+                Plant seeds for your dreams to grow
               </CardDescription>
             </CardHeader>
-            <CardContent className="p-6">
+            <CardContent className="p-6 bg-gradient-to-b from-green-50 to-emerald-50">
               <div className="space-y-4">
                 <div className="flex space-x-2">
                   <Input
-                    placeholder="Add a new goal..."
+                    placeholder="Plant a new goal..."
                     value={newGoal}
                     onChange={(e) => setNewGoal(e.target.value)}
                     onKeyPress={(e) => e.key === 'Enter' && addGoal()}
-                    className="flex-1 border-2 focus:border-green-400 rounded-xl"
+                    className="flex-1 border-2 focus:border-green-400 rounded-xl bg-white/80"
                   />
-                  <Button onClick={addGoal} size="sm" className="bg-green-500 hover:bg-green-600 rounded-xl px-4">
+                  <Button onClick={addGoal} size="sm" className="bg-green-600 hover:bg-green-700 rounded-xl px-4">
                     <Plus className="w-4 h-4" />
                   </Button>
                 </div>
                 <div className="space-y-3 max-h-48 overflow-y-auto">
                   {goals.map((goal, index) => (
-                    <div key={index} className="flex items-center justify-between p-4 bg-gradient-to-r from-gray-50 to-green-50 rounded-xl hover:from-green-50 hover:to-green-100 transition-all duration-300 group">
-                      <span className="text-sm font-medium text-gray-700 flex-1">{goal}</span>
+                    <div key={index} className="flex items-center justify-between p-4 bg-white/60 backdrop-blur-sm rounded-xl hover:bg-white/80 transition-all duration-300 group border border-green-200">
+                      <span className="text-sm font-medium text-green-800 flex-1">🌱 {goal}</span>
                       <Button
                         variant="ghost"
                         size="sm"
@@ -260,7 +303,7 @@ const Index = () => {
             </CardContent>
           </Card>
 
-          {/* Enhanced Image Slider Module */}
+          {/* Enhanced Image Slider Module with Upload */}
           <Card className="lg:col-span-1 hover:shadow-2xl transition-all duration-500 hover:scale-105 bg-white/90 backdrop-blur-sm border-0 shadow-xl">
             <CardHeader className="bg-gradient-to-br from-blue-500 to-cyan-500 text-white rounded-t-2xl relative overflow-hidden">
               <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -mr-16 -mt-16"></div>
@@ -307,7 +350,7 @@ const Index = () => {
                 </div>
               </div>
               <div className="p-4">
-                <div className="flex justify-center space-x-2">
+                <div className="flex justify-center space-x-2 mb-4">
                   {images.map((_, index) => (
                     <button
                       key={index}
@@ -317,6 +360,19 @@ const Index = () => {
                       }`}
                     />
                   ))}
+                </div>
+                <div className="relative">
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleImageUpload}
+                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                    id="image-upload"
+                  />
+                  <Button className="w-full bg-blue-500 hover:bg-blue-600 rounded-xl">
+                    <Upload className="w-4 h-4 mr-2" />
+                    Add Your Image
+                  </Button>
                 </div>
               </div>
             </CardContent>
@@ -389,44 +445,45 @@ const Index = () => {
             </CardContent>
           </Card>
 
-          {/* Enhanced Shopping/Wishlist Module */}
+          {/* Enhanced Smart Watch Module */}
           <Card className="lg:col-span-1 hover:shadow-2xl transition-all duration-500 hover:scale-105 bg-white/90 backdrop-blur-sm border-0 shadow-xl">
-            <CardHeader className="bg-gradient-to-br from-emerald-500 to-teal-500 text-white rounded-t-2xl relative overflow-hidden">
+            <CardHeader className="bg-gradient-to-br from-slate-700 to-gray-800 text-white rounded-t-2xl relative overflow-hidden">
               <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -mr-16 -mt-16"></div>
               <CardTitle className="flex items-center justify-between relative z-10">
                 <div className="flex items-center space-x-2">
-                  <ShoppingCart className="w-6 h-6" />
-                  <span>Wellness Shop</span>
+                  <Watch className="w-6 h-6" />
+                  <span>Smart Watches</span>
                 </div>
-                <Badge className="bg-white/20 text-white border-0">{wishlistItems.length} items</Badge>
+                <Badge className="bg-white/20 text-white border-0">{watchItems.length} devices</Badge>
               </CardTitle>
-              <CardDescription className="text-emerald-100 relative z-10">
-                Curated products for your wellness journey
+              <CardDescription className="text-gray-100 relative z-10">
+                Cutting-edge wearables for your active lifestyle
               </CardDescription>
             </CardHeader>
             <CardContent className="p-6">
               <div className="space-y-4">
-                {wishlistItems.map((item, index) => (
-                  <div key={index} className="flex items-center space-x-4 p-4 border-2 border-gray-100 rounded-2xl hover:border-emerald-200 hover:bg-gradient-to-r hover:from-emerald-50 hover:to-teal-50 transition-all duration-300 group cursor-pointer">
+                {watchItems.map((item, index) => (
+                  <div key={index} className="flex items-center space-x-4 p-4 border-2 border-gray-100 rounded-2xl hover:border-gray-300 hover:bg-gradient-to-r hover:from-gray-50 hover:to-slate-50 transition-all duration-300 group cursor-pointer">
                     <div className="relative">
                       <img
                         src={item.image}
                         alt={item.name}
                         className="w-16 h-16 object-cover rounded-xl group-hover:scale-110 transition-transform duration-300"
                       />
-                      <div className="absolute -top-1 -right-1 w-6 h-6 bg-emerald-500 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                        <Plus className="w-3 h-3 text-white" />
+                      <div className="absolute -top-1 -right-1 w-6 h-6 bg-slate-600 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        <Watch className="w-3 h-3 text-white" />
                       </div>
                     </div>
                     <div className="flex-1">
-                      <h4 className="font-semibold text-gray-800 group-hover:text-emerald-600 transition-colors">{item.name}</h4>
-                      <p className="text-emerald-600 font-bold text-lg">{item.price}</p>
+                      <h4 className="font-semibold text-gray-800 group-hover:text-slate-600 transition-colors">{item.name}</h4>
+                      <p className="text-slate-600 font-bold text-lg">{item.price}</p>
+                      <p className="text-xs text-gray-500 mt-1">{item.features}</p>
                     </div>
-                    <ArrowRight className="w-5 h-5 text-gray-400 group-hover:text-emerald-500 transition-colors" />
+                    <ArrowRight className="w-5 h-5 text-gray-400 group-hover:text-slate-500 transition-colors" />
                   </div>
                 ))}
-                <Button className="w-full mt-6 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 rounded-xl py-3 font-semibold">
-                  Explore All Products
+                <Button className="w-full mt-6 bg-gradient-to-r from-slate-600 to-gray-700 hover:from-slate-700 hover:to-gray-800 rounded-xl py-3 font-semibold">
+                  Explore All Watches
                   <ArrowRight className="w-4 h-4 ml-2" />
                 </Button>
               </div>
