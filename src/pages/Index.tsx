@@ -1,6 +1,5 @@
-
 import { useState } from 'react';
-import { CheckCircle, Heart, ImageIcon, BookOpen, ShoppingCart, Plus, Trash2 } from 'lucide-react';
+import { CheckCircle, Heart, ImageIcon, BookOpen, ShoppingCart, Plus, Trash2, TrendingUp, Users, Target, Zap, Star, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -51,6 +50,15 @@ const Index = () => {
     { name: 'Journal', price: '$25', image: 'https://images.unsplash.com/photo-1531346878377-a5be20888e57' }
   ];
 
+  // Stats data
+  const stats = [
+    { label: 'Goals Completed', value: '12', icon: Target, color: 'bg-blue-500', change: '+15%' },
+    { label: 'Days Active', value: '28', icon: TrendingUp, color: 'bg-green-500', change: '+23%' },
+    { label: 'Mood Score', value: '4.2', icon: Heart, color: 'bg-purple-500', change: '+8%' },
+    { label: 'Wellness Points', value: '847', icon: Star, color: 'bg-orange-500', change: '+12%' }
+  ];
+
+  // Add Goal Function
   const addGoal = () => {
     if (newGoal.trim()) {
       setGoals([...goals, newGoal.trim()]);
@@ -62,6 +70,7 @@ const Index = () => {
     }
   };
 
+  // Remove Goal Function
   const removeGoal = (index: number) => {
     setGoals(goals.filter((_, i) => i !== index));
     toast({
@@ -70,6 +79,7 @@ const Index = () => {
     });
   };
 
+  // Select Mood Function
   const selectMood = (mood: any) => {
     setCurrentMood(mood.label);
     toast({
@@ -78,62 +88,97 @@ const Index = () => {
     });
   };
 
+  // Next Image Function
   const nextImage = () => {
     setCurrentImage((prev) => (prev + 1) % images.length);
   };
 
+  // Previous Image Function
   const prevImage = () => {
     setCurrentImage((prev) => (prev - 1 + images.length) % images.length);
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
-      {/* Header */}
-      <header className="bg-white/80 backdrop-blur-sm border-b border-gray-200 sticky top-0 z-50">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
+      {/* Enhanced Header */}
+      <header className="bg-white/90 backdrop-blur-lg border-b border-gray-200/50 sticky top-0 z-50 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center">
-                <Heart className="w-6 h-6 text-white" />
+              <div className="w-12 h-12 bg-gradient-to-br from-blue-600 via-purple-600 to-pink-500 rounded-2xl flex items-center justify-center shadow-lg">
+                <Heart className="w-7 h-7 text-white" />
               </div>
-              <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                LifeSync
-              </h1>
+              <div>
+                <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                  LifeSync
+                </h1>
+                <p className="text-sm text-gray-500">Personal Wellness Hub</p>
+              </div>
             </div>
-            <Badge variant="secondary" className="bg-green-100 text-green-800">
-              {currentMood || 'Set your mood'}
-            </Badge>
+            <div className="flex items-center space-x-4">
+              <Badge variant="secondary" className="bg-green-100 text-green-800 px-3 py-1">
+                <div className="w-2 h-2 bg-green-500 rounded-full mr-2"></div>
+                {currentMood || 'Set your mood'}
+              </Badge>
+              <Button className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700">
+                Get Started
+              </Button>
+            </div>
           </div>
         </div>
       </header>
 
-      {/* Hero Section */}
-      <section className="py-12 px-4 sm:px-6 lg:px-8 text-center">
-        <div className="max-w-4xl mx-auto">
-          <h2 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6">
-            Your Personal
-            <span className="block bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-              Wellness Dashboard
+      {/* Enhanced Hero Section */}
+      <section className="py-16 px-4 sm:px-6 lg:px-8 text-center relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-r from-blue-600/10 to-purple-600/10 rounded-3xl mx-8"></div>
+        <div className="max-w-5xl mx-auto relative">
+          <div className="inline-flex items-center px-4 py-2 bg-blue-100 rounded-full text-blue-700 text-sm font-medium mb-6">
+            <Zap className="w-4 h-4 mr-2" />
+            Elevate Your Productivity & Wellness
+          </div>
+          <h2 className="text-5xl md:text-7xl font-bold text-gray-900 mb-6 leading-tight">
+            Empower Your
+            <span className="block bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 bg-clip-text text-transparent">
+              Personal Journey
             </span>
           </h2>
-          <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
-            Track your goals, monitor your mood, explore inspiration, and manage your wellness journey all in one beautiful place.
+          <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto leading-relaxed">
+            A modular dashboard for managing goals, mood, creativity, and shopping seamlessly. 
+            Track your wellness journey with beautiful analytics and interactive tools.
           </p>
+          
+          {/* Stats Grid */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-12 mb-8">
+            {stats.map((stat, index) => (
+              <div key={index} className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
+                <div className={`w-12 h-12 ${stat.color} rounded-xl flex items-center justify-center mb-3 mx-auto`}>
+                  <stat.icon className="w-6 h-6 text-white" />
+                </div>
+                <div className="text-3xl font-bold text-gray-900 mb-1">{stat.value}</div>
+                <div className="text-sm text-gray-600 mb-2">{stat.label}</div>
+                <div className="text-xs text-green-600 font-medium">{stat.change}</div>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
-      {/* Main Dashboard Grid */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12">
+      {/* Enhanced Main Dashboard Grid */}
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           
-          {/* Bucket List Module */}
-          <Card className="lg:col-span-1 hover:shadow-lg transition-shadow duration-300">
-            <CardHeader className="bg-gradient-to-r from-green-500 to-green-600 text-white rounded-t-lg">
-              <CardTitle className="flex items-center space-x-2">
-                <CheckCircle className="w-5 h-5" />
-                <span>Bucket List</span>
+          {/* Enhanced Bucket List Module */}
+          <Card className="lg:col-span-1 hover:shadow-2xl transition-all duration-500 hover:scale-105 bg-white/90 backdrop-blur-sm border-0 shadow-xl">
+            <CardHeader className="bg-gradient-to-br from-green-500 to-emerald-600 text-white rounded-t-2xl relative overflow-hidden">
+              <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -mr-16 -mt-16"></div>
+              <CardTitle className="flex items-center justify-between relative z-10">
+                <div className="flex items-center space-x-2">
+                  <CheckCircle className="w-6 h-6" />
+                  <span>Bucket List</span>
+                </div>
+                <Badge className="bg-white/20 text-white border-0">{goals.length}</Badge>
               </CardTitle>
-              <CardDescription className="text-green-100">
+              <CardDescription className="text-green-100 relative z-10">
                 Track your life goals and dreams
               </CardDescription>
             </CardHeader>
@@ -145,21 +190,21 @@ const Index = () => {
                     value={newGoal}
                     onChange={(e) => setNewGoal(e.target.value)}
                     onKeyPress={(e) => e.key === 'Enter' && addGoal()}
-                    className="flex-1"
+                    className="flex-1 border-2 focus:border-green-400 rounded-xl"
                   />
-                  <Button onClick={addGoal} size="sm" className="bg-green-500 hover:bg-green-600">
+                  <Button onClick={addGoal} size="sm" className="bg-green-500 hover:bg-green-600 rounded-xl px-4">
                     <Plus className="w-4 h-4" />
                   </Button>
                 </div>
-                <div className="space-y-2 max-h-48 overflow-y-auto">
+                <div className="space-y-3 max-h-48 overflow-y-auto">
                   {goals.map((goal, index) => (
-                    <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
-                      <span className="text-sm">{goal}</span>
+                    <div key={index} className="flex items-center justify-between p-4 bg-gradient-to-r from-gray-50 to-green-50 rounded-xl hover:from-green-50 hover:to-green-100 transition-all duration-300 group">
+                      <span className="text-sm font-medium text-gray-700 flex-1">{goal}</span>
                       <Button
                         variant="ghost"
                         size="sm"
                         onClick={() => removeGoal(index)}
-                        className="text-red-500 hover:text-red-700 hover:bg-red-50"
+                        className="text-red-500 hover:text-red-700 hover:bg-red-50 rounded-lg opacity-0 group-hover:opacity-100 transition-all duration-200"
                       >
                         <Trash2 className="w-4 h-4" />
                       </Button>
@@ -170,14 +215,18 @@ const Index = () => {
             </CardContent>
           </Card>
 
-          {/* Mood Tracker Module */}
-          <Card className="lg:col-span-1 hover:shadow-lg transition-shadow duration-300">
-            <CardHeader className="bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-t-lg">
-              <CardTitle className="flex items-center space-x-2">
-                <Heart className="w-5 h-5" />
-                <span>Mood Tracker</span>
+          {/* Enhanced Mood Tracker Module */}
+          <Card className="lg:col-span-1 hover:shadow-2xl transition-all duration-500 hover:scale-105 bg-white/90 backdrop-blur-sm border-0 shadow-xl">
+            <CardHeader className="bg-gradient-to-br from-purple-500 to-pink-500 text-white rounded-t-2xl relative overflow-hidden">
+              <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -mr-16 -mt-16"></div>
+              <CardTitle className="flex items-center justify-between relative z-10">
+                <div className="flex items-center space-x-2">
+                  <Heart className="w-6 h-6" />
+                  <span>Mood Tracker</span>
+                </div>
+                <Badge className="bg-white/20 text-white border-0">Daily</Badge>
               </CardTitle>
-              <CardDescription className="text-purple-100">
+              <CardDescription className="text-purple-100 relative z-10">
                 How are you feeling today?
               </CardDescription>
             </CardHeader>
@@ -187,15 +236,23 @@ const Index = () => {
                   <button
                     key={mood.label}
                     onClick={() => selectMood(mood)}
-                    className={`p-3 rounded-lg border-2 transition-all duration-200 hover:scale-105 ${
+                    className={`p-4 rounded-xl border-2 transition-all duration-300 hover:scale-105 transform ${
                       currentMood === mood.label
-                        ? `${mood.color} border-gray-800 text-white`
-                        : 'border-gray-200 hover:border-gray-300'
+                        ? `${mood.color} border-gray-800 text-white shadow-lg`
+                        : 'border-gray-200 hover:border-purple-300 hover:shadow-md bg-gradient-to-r from-white to-purple-50'
                     }`}
                   >
                     <div className="flex items-center space-x-3">
-                      <span className="text-2xl">{mood.emoji}</span>
-                      <span className="font-medium">{mood.label}</span>
+                      <span className="text-3xl">{mood.emoji}</span>
+                      <div className="flex-1 text-left">
+                        <span className="font-semibold">{mood.label}</span>
+                        {currentMood === mood.label && (
+                          <div className="text-sm opacity-90">Current mood</div>
+                        )}
+                      </div>
+                      {currentMood === mood.label && (
+                        <CheckCircle className="w-5 h-5" />
+                      )}
                     </div>
                   </button>
                 ))}
@@ -203,35 +260,39 @@ const Index = () => {
             </CardContent>
           </Card>
 
-          {/* Image Slider Module */}
-          <Card className="lg:col-span-1 hover:shadow-lg transition-shadow duration-300">
-            <CardHeader className="bg-gradient-to-r from-blue-500 to-cyan-500 text-white rounded-t-lg">
-              <CardTitle className="flex items-center space-x-2">
-                <ImageIcon className="w-5 h-5" />
-                <span>Inspiration Gallery</span>
+          {/* Enhanced Image Slider Module */}
+          <Card className="lg:col-span-1 hover:shadow-2xl transition-all duration-500 hover:scale-105 bg-white/90 backdrop-blur-sm border-0 shadow-xl">
+            <CardHeader className="bg-gradient-to-br from-blue-500 to-cyan-500 text-white rounded-t-2xl relative overflow-hidden">
+              <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -mr-16 -mt-16"></div>
+              <CardTitle className="flex items-center justify-between relative z-10">
+                <div className="flex items-center space-x-2">
+                  <ImageIcon className="w-6 h-6" />
+                  <span>Inspiration Gallery</span>
+                </div>
+                <Badge className="bg-white/20 text-white border-0">{currentImage + 1}/{images.length}</Badge>
               </CardTitle>
-              <CardDescription className="text-blue-100">
+              <CardDescription className="text-blue-100 relative z-10">
                 Daily motivation and beautiful moments
               </CardDescription>
             </CardHeader>
             <CardContent className="p-0">
-              <div className="relative">
+              <div className="relative group">
                 <img
                   src={images[currentImage].url}
                   alt="Inspiration"
-                  className="w-full h-48 object-cover"
+                  className="w-full h-52 object-cover transition-transform duration-500 group-hover:scale-105"
                 />
-                <div className="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center">
-                  <p className="text-white text-lg font-semibold text-center px-4">
+                <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent flex items-end justify-center p-6">
+                  <p className="text-white text-lg font-bold text-center">
                     {images[currentImage].caption}
                   </p>
                 </div>
-                <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
+                <div className="absolute top-1/2 left-4 right-4 flex justify-between transform -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                   <Button
                     variant="secondary"
                     size="sm"
                     onClick={prevImage}
-                    className="bg-white/80 hover:bg-white"
+                    className="bg-white/90 hover:bg-white backdrop-blur-sm rounded-full w-10 h-10 p-0"
                   >
                     ←
                   </Button>
@@ -239,19 +300,20 @@ const Index = () => {
                     variant="secondary"
                     size="sm"
                     onClick={nextImage}
-                    className="bg-white/80 hover:bg-white"
+                    className="bg-white/90 hover:bg-white backdrop-blur-sm rounded-full w-10 h-10 p-0"
                   >
                     →
                   </Button>
                 </div>
               </div>
               <div className="p-4">
-                <div className="flex justify-center space-x-1">
+                <div className="flex justify-center space-x-2">
                   {images.map((_, index) => (
-                    <div
+                    <button
                       key={index}
-                      className={`w-2 h-2 rounded-full transition-colors ${
-                        index === currentImage ? 'bg-blue-500' : 'bg-gray-300'
+                      onClick={() => setCurrentImage(index)}
+                      className={`w-3 h-3 rounded-full transition-all duration-300 ${
+                        index === currentImage ? 'bg-blue-500 scale-125' : 'bg-gray-300 hover:bg-gray-400'
                       }`}
                     />
                   ))}
@@ -260,77 +322,112 @@ const Index = () => {
             </CardContent>
           </Card>
 
-          {/* Magazine View Module */}
-          <Card className="lg:col-span-2 hover:shadow-lg transition-shadow duration-300">
-            <CardHeader className="bg-gradient-to-r from-orange-500 to-red-500 text-white rounded-t-lg">
-              <CardTitle className="flex items-center space-x-2">
-                <BookOpen className="w-5 h-5" />
-                <span>Wellness Magazine</span>
+          {/* Enhanced Magazine View Module */}
+          <Card className="lg:col-span-2 hover:shadow-2xl transition-all duration-500 hover:scale-[1.02] bg-white/90 backdrop-blur-sm border-0 shadow-xl">
+            <CardHeader className="bg-gradient-to-br from-orange-500 to-red-500 text-white rounded-t-2xl relative overflow-hidden">
+              <div className="absolute top-0 right-0 w-40 h-40 bg-white/10 rounded-full -mr-20 -mt-20"></div>
+              <CardTitle className="flex items-center justify-between relative z-10">
+                <div className="flex items-center space-x-2">
+                  <BookOpen className="w-6 h-6" />
+                  <span>Wellness Magazine</span>
+                </div>
+                <Badge className="bg-white/20 text-white border-0">Featured</Badge>
               </CardTitle>
-              <CardDescription className="text-orange-100">
+              <CardDescription className="text-orange-100 relative z-10">
                 Latest articles on personal growth and wellness
               </CardDescription>
             </CardHeader>
             <CardContent className="p-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <article className="group cursor-pointer">
-                  <img
-                    src="https://images.unsplash.com/photo-1506126613408-eca07ce68773"
-                    alt="Mindfulness"
-                    className="w-full h-32 object-cover rounded-lg mb-3 group-hover:scale-105 transition-transform duration-200"
-                  />
-                  <h3 className="font-semibold text-gray-800 group-hover:text-orange-500 transition-colors">
+                  <div className="relative overflow-hidden rounded-2xl mb-4">
+                    <img
+                      src="https://images.unsplash.com/photo-1506126613408-eca07ce68773"
+                      alt="Mindfulness"
+                      className="w-full h-40 object-cover group-hover:scale-110 transition-transform duration-500"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    <div className="absolute bottom-3 right-3 opacity-0 group-hover:opacity-100 transition-all duration-300">
+                      <ArrowRight className="w-5 h-5 text-white" />
+                    </div>
+                  </div>
+                  <h3 className="font-bold text-gray-800 group-hover:text-orange-500 transition-colors text-lg mb-2">
                     5 Mindfulness Techniques for Daily Peace
                   </h3>
-                  <p className="text-sm text-gray-600 mt-1">
-                    Discover simple practices to bring mindfulness into your everyday routine...
+                  <p className="text-sm text-gray-600 mb-3">
+                    Discover simple practices to bring mindfulness into your everyday routine and reduce stress naturally.
                   </p>
+                  <div className="flex items-center text-xs text-gray-500">
+                    <span className="bg-orange-100 text-orange-600 px-2 py-1 rounded-full mr-2">Wellness</span>
+                    <span>5 min read</span>
+                  </div>
                 </article>
                 <article className="group cursor-pointer">
-                  <img
-                    src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b"
-                    alt="Productivity"
-                    className="w-full h-32 object-cover rounded-lg mb-3 group-hover:scale-105 transition-transform duration-200"
-                  />
-                  <h3 className="font-semibold text-gray-800 group-hover:text-orange-500 transition-colors">
+                  <div className="relative overflow-hidden rounded-2xl mb-4">
+                    <img
+                      src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b"
+                      alt="Productivity"
+                      className="w-full h-40 object-cover group-hover:scale-110 transition-transform duration-500"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    <div className="absolute bottom-3 right-3 opacity-0 group-hover:opacity-100 transition-all duration-300">
+                      <ArrowRight className="w-5 h-5 text-white" />
+                    </div>
+                  </div>
+                  <h3 className="font-bold text-gray-800 group-hover:text-orange-500 transition-colors text-lg mb-2">
                     Building Sustainable Habits That Stick
                   </h3>
-                  <p className="text-sm text-gray-600 mt-1">
-                    Learn the science behind habit formation and how to make lasting changes...
+                  <p className="text-sm text-gray-600 mb-3">
+                    Learn the science behind habit formation and discover proven strategies for creating lasting positive changes.
                   </p>
+                  <div className="flex items-center text-xs text-gray-500">
+                    <span className="bg-blue-100 text-blue-600 px-2 py-1 rounded-full mr-2">Productivity</span>
+                    <span>7 min read</span>
+                  </div>
                 </article>
               </div>
             </CardContent>
           </Card>
 
-          {/* Shopping/Wishlist Module */}
-          <Card className="lg:col-span-1 hover:shadow-lg transition-shadow duration-300">
-            <CardHeader className="bg-gradient-to-r from-emerald-500 to-teal-500 text-white rounded-t-lg">
-              <CardTitle className="flex items-center space-x-2">
-                <ShoppingCart className="w-5 h-5" />
-                <span>Wellness Wishlist</span>
+          {/* Enhanced Shopping/Wishlist Module */}
+          <Card className="lg:col-span-1 hover:shadow-2xl transition-all duration-500 hover:scale-105 bg-white/90 backdrop-blur-sm border-0 shadow-xl">
+            <CardHeader className="bg-gradient-to-br from-emerald-500 to-teal-500 text-white rounded-t-2xl relative overflow-hidden">
+              <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -mr-16 -mt-16"></div>
+              <CardTitle className="flex items-center justify-between relative z-10">
+                <div className="flex items-center space-x-2">
+                  <ShoppingCart className="w-6 h-6" />
+                  <span>Wellness Shop</span>
+                </div>
+                <Badge className="bg-white/20 text-white border-0">{wishlistItems.length} items</Badge>
               </CardTitle>
-              <CardDescription className="text-emerald-100">
-                Products for your wellness journey
+              <CardDescription className="text-emerald-100 relative z-10">
+                Curated products for your wellness journey
               </CardDescription>
             </CardHeader>
             <CardContent className="p-6">
               <div className="space-y-4">
                 {wishlistItems.map((item, index) => (
-                  <div key={index} className="flex items-center space-x-3 p-3 border rounded-lg hover:bg-gray-50 transition-colors">
-                    <img
-                      src={item.image}
-                      alt={item.name}
-                      className="w-12 h-12 object-cover rounded"
-                    />
-                    <div className="flex-1">
-                      <h4 className="font-medium text-sm">{item.name}</h4>
-                      <p className="text-emerald-600 font-semibold text-sm">{item.price}</p>
+                  <div key={index} className="flex items-center space-x-4 p-4 border-2 border-gray-100 rounded-2xl hover:border-emerald-200 hover:bg-gradient-to-r hover:from-emerald-50 hover:to-teal-50 transition-all duration-300 group cursor-pointer">
+                    <div className="relative">
+                      <img
+                        src={item.image}
+                        alt={item.name}
+                        className="w-16 h-16 object-cover rounded-xl group-hover:scale-110 transition-transform duration-300"
+                      />
+                      <div className="absolute -top-1 -right-1 w-6 h-6 bg-emerald-500 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        <Plus className="w-3 h-3 text-white" />
+                      </div>
                     </div>
+                    <div className="flex-1">
+                      <h4 className="font-semibold text-gray-800 group-hover:text-emerald-600 transition-colors">{item.name}</h4>
+                      <p className="text-emerald-600 font-bold text-lg">{item.price}</p>
+                    </div>
+                    <ArrowRight className="w-5 h-5 text-gray-400 group-hover:text-emerald-500 transition-colors" />
                   </div>
                 ))}
-                <Button className="w-full mt-4 bg-emerald-500 hover:bg-emerald-600">
-                  View All Items
+                <Button className="w-full mt-6 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 rounded-xl py-3 font-semibold">
+                  Explore All Products
+                  <ArrowRight className="w-4 h-4 ml-2" />
                 </Button>
               </div>
             </CardContent>
@@ -339,12 +436,42 @@ const Index = () => {
         </div>
       </main>
 
-      {/* Footer */}
-      <footer className="bg-white border-t border-gray-200 py-8">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <p className="text-gray-600">
-            LifeSync - Your journey to a balanced, productive life starts here.
-          </p>
+      {/* Enhanced Footer */}
+      <footer className="bg-gradient-to-r from-gray-900 to-gray-800 text-white py-12">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center md:text-left">
+            <div>
+              <div className="flex items-center justify-center md:justify-start space-x-3 mb-4">
+                <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center">
+                  <Heart className="w-6 h-6 text-white" />
+                </div>
+                <span className="text-2xl font-bold">LifeSync</span>
+              </div>
+              <p className="text-gray-400">
+                Your personal hub for goal and mood tracking, empowering a balanced lifestyle.
+              </p>
+            </div>
+            <div>
+              <h3 className="text-lg font-semibold mb-4">Quick Stats</h3>
+              <div className="space-y-2 text-gray-400">
+                <p>150+ Active Users</p>
+                <p>1,200+ Goals Completed</p>
+                <p>95% User Satisfaction</p>
+              </div>
+            </div>
+            <div>
+              <h3 className="text-lg font-semibold mb-4">Connect</h3>
+              <p className="text-gray-400 mb-4">
+                Join our community of wellness enthusiasts and productivity experts.
+              </p>
+              <Button className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700">
+                Get Started Today
+              </Button>
+            </div>
+          </div>
+          <div className="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">
+            <p>&copy; 2024 LifeSync. Empowering your journey to a balanced, productive life.</p>
+          </div>
         </div>
       </footer>
     </div>
