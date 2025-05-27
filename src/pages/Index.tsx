@@ -1,19 +1,25 @@
-
 import { useState } from 'react';
-import { CheckCircle, Heart, ImageIcon, BookOpen, Watch, Plus, Trash2, TrendingUp, Users, Target, Zap, Star, ArrowRight, Upload } from 'lucide-react';
+import { CheckCircle, Heart, ImageIcon, BookOpen, Watch, Plus, Trash2, TrendingUp, Users, Target, Zap, Star, ArrowRight, Upload, Check, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { toast } from '@/hooks/use-toast';
 
+interface Goal {
+  id: string;
+  text: string;
+  completed: boolean;
+  addedAt: Date;
+}
+
 const Index = () => {
   // Bucket List State
-  const [goals, setGoals] = useState([
-    'Learn a new language',
-    'Travel to Japan',
-    'Run a marathon',
-    'Write a book'
+  const [goals, setGoals] = useState<Goal[]>([
+    { id: '1', text: 'Learn a new language', completed: false, addedAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000) }, // 5 days ago
+    { id: '2', text: 'Travel to Japan', completed: false, addedAt: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000) }, // 10 days ago
+    { id: '3', text: 'Run a marathon', completed: true, addedAt: new Date(Date.now() - 20 * 24 * 60 * 60 * 1000) }, // 20 days ago
+    { id: '4', text: 'Write a book', completed: false, addedAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000) } // 2 days ago
   ]);
   const [newGoal, setNewGoal] = useState('');
 
@@ -66,6 +72,18 @@ const Index = () => {
     }
   ];
 
+  // Get time since added
+  const getTimeAgo = (date: Date) => {
+    const now = new Date();
+    const diffTime = Math.abs(now.getTime() - date.getTime());
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    
+    if (diffDays === 1) return '1 day ago';
+    if (diffDays <= 7) return `${diffDays} days ago`;
+    if (diffDays <= 30) return `${Math.ceil(diffDays / 7)} week${Math.ceil(diffDays / 7) > 1 ? 's' : ''} ago`;
+    return `${Math.ceil(diffDays / 30)} month${Math.ceil(diffDays / 30) > 1 ? 's' : ''} ago`;
+  };
+
   // Get current mood theme
   const getCurrentTheme = () => {
     const mood = moods.find(m => m.label === currentMood);
@@ -83,7 +101,13 @@ const Index = () => {
   // Add Goal Function
   const addGoal = () => {
     if (newGoal.trim()) {
-      setGoals([...goals, newGoal.trim()]);
+      const goal: Goal = {
+        id: Date.now().toString(),
+        text: newGoal.trim(),
+        completed: false,
+        addedAt: new Date()
+      };
+      setGoals([...goals, goal]);
       setNewGoal('');
       toast({
         title: "Goal Added!",
@@ -92,12 +116,28 @@ const Index = () => {
     }
   };
 
+  // Toggle Goal Completion
+  const toggleGoal = (id: string) => {
+    setGoals(goals.map(goal => 
+      goal.id === id 
+        ? { ...goal, completed: !goal.completed }
+        : goal
+    ));
+    const goal = goals.find(g => g.id === id);
+    if (goal) {
+      toast({
+        title: goal.completed ? "Goal Reopened!" : "Goal Completed!",
+        description: goal.completed ? "Goal moved back to active list." : "Congratulations on completing your goal!",
+      });
+    }
+  };
+
   // Remove Goal Function
-  const removeGoal = (index: number) => {
-    setGoals(goals.filter((_, i) => i !== index));
+  const removeGoal = (id: string) => {
+    setGoals(goals.filter(goal => goal.id !== id));
     toast({
-      title: "Goal Completed!",
-      description: "Congratulations on completing your goal!",
+      title: "Goal Removed!",
+      description: "Goal has been removed from your bucket list.",
     });
   };
 
@@ -208,28 +248,34 @@ const Index = () => {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           
-          {/* Enhanced Bucket List Module with Forest Theme */}
-          <Card className="lg:col-span-1 hover:shadow-2xl transition-all duration-500 hover:scale-105 bg-white/90 backdrop-blur-sm border-0 shadow-xl">
-            <CardHeader className="bg-gradient-to-br from-green-700 via-emerald-600 to-green-500 text-white rounded-t-2xl relative overflow-hidden">
-              <div className="absolute inset-0" style={{
-                backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
-              }}></div>
+          {/* Enhanced Bucket List Module with Forest Background */}
+          <Card className="lg:col-span-1 hover:shadow-2xl transition-all duration-500 hover:scale-105 bg-white/90 backdrop-blur-sm border-0 shadow-xl overflow-hidden">
+            <CardHeader 
+              className="text-white rounded-t-2xl relative overflow-hidden h-32"
+              style={{
+                backgroundImage: `url('/lovable-uploads/70c1ed90-665d-4b9f-b4c3-22b0e74ba932.png')`,
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                backgroundRepeat: 'no-repeat'
+              }}
+            >
+              <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/60"></div>
               <CardTitle className="flex items-center justify-between relative z-10">
                 <div className="flex items-center space-x-2">
                   <CheckCircle className="w-6 h-6" />
-                  <span>Forest Goals</span>
+                  <span className="text-xl font-bold">My Bucket List</span>
                 </div>
                 <Badge className="bg-white/20 text-white border-0">{goals.length}</Badge>
               </CardTitle>
-              <CardDescription className="text-green-100 relative z-10">
-                Plant seeds for your dreams to grow
+              <CardDescription className="text-white/90 relative z-10 font-medium">
+                Dreams waiting to be achieved
               </CardDescription>
             </CardHeader>
             <CardContent className="p-6 bg-gradient-to-b from-green-50 to-emerald-50">
               <div className="space-y-4">
                 <div className="flex space-x-2">
                   <Input
-                    placeholder="Plant a new goal..."
+                    placeholder="Add a new dream..."
                     value={newGoal}
                     onChange={(e) => setNewGoal(e.target.value)}
                     onKeyPress={(e) => e.key === 'Enter' && addGoal()}
@@ -239,17 +285,44 @@ const Index = () => {
                     <Plus className="w-4 h-4" />
                   </Button>
                 </div>
-                <div className="space-y-3 max-h-48 overflow-y-auto">
-                  {goals.map((goal, index) => (
-                    <div key={index} className="flex items-center justify-between p-4 bg-white/60 backdrop-blur-sm rounded-xl hover:bg-white/80 transition-all duration-300 group border border-green-200">
-                      <span className="text-sm font-medium text-green-800 flex-1">🌱 {goal}</span>
+                <div className="space-y-3 max-h-64 overflow-y-auto">
+                  {goals.map((goal) => (
+                    <div key={goal.id} className={`flex items-center justify-between p-4 rounded-xl transition-all duration-300 group border-2 ${
+                      goal.completed 
+                        ? 'bg-green-100/80 border-green-300 opacity-75' 
+                        : 'bg-white/60 backdrop-blur-sm border-green-200 hover:bg-white/80'
+                    }`}>
+                      <div className="flex items-center space-x-3 flex-1">
+                        <button
+                          onClick={() => toggleGoal(goal.id)}
+                          className={`w-6 h-6 rounded-full border-2 flex items-center justify-center transition-all duration-200 ${
+                            goal.completed 
+                              ? 'bg-green-500 border-green-500 text-white' 
+                              : 'border-green-400 hover:border-green-500'
+                          }`}
+                        >
+                          {goal.completed && <Check className="w-4 h-4" />}
+                        </button>
+                        <div className="flex-1">
+                          <span className={`text-sm font-medium ${
+                            goal.completed 
+                              ? 'text-green-700 line-through' 
+                              : 'text-green-800'
+                          }`}>
+                            {goal.text}
+                          </span>
+                          <div className="text-xs text-green-600 mt-1">
+                            {getTimeAgo(goal.addedAt)}
+                          </div>
+                        </div>
+                      </div>
                       <Button
                         variant="ghost"
                         size="sm"
-                        onClick={() => removeGoal(index)}
+                        onClick={() => removeGoal(goal.id)}
                         className="text-red-500 hover:text-red-700 hover:bg-red-50 rounded-lg opacity-0 group-hover:opacity-100 transition-all duration-200"
                       >
-                        <Trash2 className="w-4 h-4" />
+                        <X className="w-4 h-4" />
                       </Button>
                     </div>
                   ))}
